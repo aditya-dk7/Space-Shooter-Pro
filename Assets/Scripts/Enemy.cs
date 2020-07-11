@@ -6,9 +6,7 @@ public class Enemy : MonoBehaviour
 {
     private float _enemySpeed = 2f;
     private GameObject _laserPrefab;
-    // Start is called before the first frame update
    
-    // Update is called once per frame
     void Update()
     {
         transform.Translate(Vector3.down * Time.deltaTime * _enemySpeed);

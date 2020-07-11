@@ -5,8 +5,7 @@ using UnityEngine;
 public class Laser : MonoBehaviour
 {
     private float _speedLaser = 8.0f;
-    
-    // Update is called once per frame
+  
     void Update()
     {
         transform.Translate(Vector3.up * Time.deltaTime * _speedLaser);
