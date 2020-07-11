@@ -1,6 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using System.Security.Cryptography;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -16,10 +14,15 @@ public class Player : MonoBehaviour
     private int _lives = 3;
     private SpawnManager _spawnManager;
     private bool _isTripleShotActive = false;
+    private bool _isSpeedPowerupActive = false;
+    private bool _isShieldActive = false;
     [SerializeField]
     private GameObject _tripleShotPrefab;
+    [SerializeField]
+    private GameObject _shieldVisualizer;
 
-    
+
+
     void Start()
     {
         transform.position = new Vector3(0,0,0);
@@ -44,16 +47,19 @@ public class Player : MonoBehaviour
 
     void CalculateMovement()
     {
-        //float horizontalInput = Input.GetAxis("Horizontal");
-        //float verticalInput = Input.GetAxis("Vertical");
-        // It is similar to write Vector3(1,0,0) * Time * 5 -> Makes it go 5m/sec
-        //transform.Translate(Vector3.right * Time.deltaTime * speed * horizontalInput);
-        //transform.Translate(Vector3.up * Time.deltaTime * speed * verticalInput);
+        if (_isSpeedPowerupActive)
+        {
+            
+            transform.Translate(new Vector3(Input.GetAxis("Horizontal"),
+                                     Input.GetAxis("Vertical"), 0) * _speed * Time.deltaTime);
+        }
+        else
+        {
+            transform.Translate(new Vector3(Input.GetAxis("Horizontal"),
+                         Input.GetAxis("Vertical"), 0) * _speed * Time.deltaTime);
+        }
 
-        //The instructor made me realize that I was using two new vectors to ddo the same movement
-        //Thefore, the above is commented out and I have a new method to approach it
-        transform.Translate(new Vector3(Input.GetAxis("Horizontal"),
-             Input.GetAxis("Vertical"), 0) * _speed * Time.deltaTime);
+        
         if (transform.position.y >= 2)
         {
             transform.position = new Vector3(transform.position.x, 2, 0);
@@ -91,13 +97,23 @@ public class Player : MonoBehaviour
 
     public void Damage()
     {
-        _lives--;
-
-        if(_lives == 0)
+        if (_isShieldActive == false)
         {
-            _spawnManager.OnPlayerDeath();
-            Destroy(this.gameObject);
+            _lives--;
+
+            if (_lives == 0)
+            {
+                _spawnManager.OnPlayerDeath();
+                Destroy(this.gameObject);
+            }
         }
+        else
+        {
+            _isShieldActive = false;
+            _shieldVisualizer.SetActive(false);
+            return;
+        }
+        
     }
 
     public void TripleShotActive()
@@ -105,6 +121,36 @@ public class Player : MonoBehaviour
         _isTripleShotActive = true;
         StartCoroutine(TripleShotPowerDownRoutine());
     }
+    public void ShieldActive()
+    {
+        _isShieldActive = true;
+        _shieldVisualizer.SetActive(true);
+        StartCoroutine(ShieldPowerDownRoutine());
+    }
+    public void SpeedPowerupActive()
+    {
+        _isSpeedPowerupActive = true;
+        _speed += 5.0f;
+        StartCoroutine(SpeedPowerDownRoutine());
+    }
+
+    IEnumerator ShieldPowerDownRoutine()
+    {
+        yield return new WaitForSeconds(5.0f);
+        _shieldVisualizer.SetActive(false);
+        _isShieldActive = false;
+    }
+
+    
+
+    IEnumerator SpeedPowerDownRoutine()
+    {
+        yield return new WaitForSeconds(5.0f);
+        _speed -= 5.0f;
+        _isSpeedPowerupActive = false;
+
+    }
+
     IEnumerator TripleShotPowerDownRoutine()
     {
         yield return new WaitForSeconds(5.0f);

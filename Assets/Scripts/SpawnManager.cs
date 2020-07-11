@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
@@ -10,7 +8,7 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private GameObject _enemyContainer;
     [SerializeField]
-    private GameObject _tripleShotPowerUpPrefab;
+    private GameObject [] powerup;
     private bool _stopSpawning = false;
 
     
@@ -18,6 +16,7 @@ public class SpawnManager : MonoBehaviour
     {
         StartCoroutine(SpawnEnemyRoutine());
         StartCoroutine(SpawnPowerupRoutine());
+        
     }
 
     
@@ -31,7 +30,7 @@ public class SpawnManager : MonoBehaviour
     {
         while (_stopSpawning == false)
         {
-            Vector3 posToSpawn = new Vector3(UnityEngine.Random.Range(-9f, 9f), 9.0f, 0);
+            Vector3 posToSpawn = new Vector3(Random.Range(-9f, 9f), 9.0f, 0);
             GameObject newEnemy = Instantiate(_enemyPrefab,posToSpawn,Quaternion.identity);
             newEnemy.transform.parent = _enemyContainer.transform;
             yield return new WaitForSeconds(5.0f);
@@ -42,7 +41,9 @@ public class SpawnManager : MonoBehaviour
         while (_stopSpawning == false)
         {
             Vector3 postToSpawn = new Vector3(UnityEngine.Random.Range(-9f,9f),9f,0);
-            Instantiate(_tripleShotPowerUpPrefab,postToSpawn,Quaternion.identity);
+            int randomPowerup = Random.Range(0,3);
+            Instantiate(powerup[randomPowerup],postToSpawn,Quaternion.identity);
+
             yield return new WaitForSeconds(UnityEngine.Random.Range(8,15));
         }
     }
