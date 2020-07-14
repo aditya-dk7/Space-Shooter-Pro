@@ -6,11 +6,24 @@ public class Enemy : MonoBehaviour
     private GameObject _laserPrefab;
 
     private Player _player;
+
+    private Animator _anim;
     
     private void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
         
+        if(_player == null)
+        {
+            Debug.LogError("The player is null.");
+        }
+        _anim = GetComponent<Animator>();
+
+        if (_anim == null)
+        {
+            Debug.LogError("The Animator is null.");
+        }
+
     }
 
     void Update()
@@ -30,7 +43,10 @@ public class Enemy : MonoBehaviour
             if (player != null)
             {
                 player.Damage();
-                Destroy(this.gameObject);
+                _anim.SetTrigger("OnEnemyDeath");
+                _enemySpeed = 0;
+                Destroy(this.gameObject, 2.8f);
+                
             }
             
         }
@@ -43,8 +59,9 @@ public class Enemy : MonoBehaviour
             {
                 _player.UpdateScore(Random.Range(5,10));
             }
-            
-            Destroy(this.gameObject);
+            _anim.SetTrigger("OnEnemyDeath");
+            _enemySpeed = 0;
+            Destroy(this.gameObject,2.8f);
 
 
         }
