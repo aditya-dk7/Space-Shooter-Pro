@@ -10,15 +10,19 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private GameObject [] powerup;
     private bool _stopSpawning = false;
-
+    
     
     void Start()
     {
-        StartCoroutine(SpawnEnemyRoutine());
-        StartCoroutine(SpawnPowerupRoutine());
+        
         
     }
 
+    public void startSpawning()
+    {
+        StartCoroutine(SpawnEnemyRoutine());
+        StartCoroutine(SpawnPowerupRoutine());
+    }
     
     void Update()
     {
@@ -28,6 +32,7 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnEnemyRoutine()
     {
+        yield return new WaitForSeconds(2.0f);
         while (_stopSpawning == false)
         {
             Vector3 posToSpawn = new Vector3(Random.Range(-9f, 9f), 9.0f, 0);

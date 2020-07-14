@@ -60,8 +60,9 @@ public class Enemy : MonoBehaviour
                 _player.UpdateScore(Random.Range(5,10));
             }
             _anim.SetTrigger("OnEnemyDeath");
+            Destroy(this.gameObject, 2.8f);
             _enemySpeed = 0;
-            Destroy(this.gameObject,2.8f);
+            
 
 
         }
