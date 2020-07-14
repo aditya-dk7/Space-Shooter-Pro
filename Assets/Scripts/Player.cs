@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Data;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -20,6 +21,9 @@ public class Player : MonoBehaviour
     private GameObject _tripleShotPrefab;
     [SerializeField]
     private GameObject _shieldVisualizer;
+    [SerializeField]
+    private int _score = 0;
+    private UIManager _uiManager;
 
 
 
@@ -31,6 +35,13 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("The Spawn Manager is null.");
         }
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+
+        if (_uiManager == null)
+        {
+            Debug.LogError("The UI Manager is null.");
+        }
+
     }
 
     
@@ -100,11 +111,13 @@ public class Player : MonoBehaviour
         if (_isShieldActive == false)
         {
             _lives--;
+            _uiManager.UpdateLives(_lives);
 
             if (_lives == 0)
             {
                 _spawnManager.OnPlayerDeath();
                 Destroy(this.gameObject);
+                
             }
         }
         else
@@ -157,4 +170,9 @@ public class Player : MonoBehaviour
         _isTripleShotActive = false;
     }
 
+    public void UpdateScore(int points)
+    {
+        _score += points;
+        _uiManager.UpdateScore(_score);
+    }
 }

@@ -4,7 +4,15 @@ public class Enemy : MonoBehaviour
 {
     private float _enemySpeed = 2f;
     private GameObject _laserPrefab;
-   
+
+    private Player _player;
+    
+    private void Start()
+    {
+        _player = GameObject.Find("Player").GetComponent<Player>();
+        
+    }
+
     void Update()
     {
         transform.Translate(Vector3.down * Time.deltaTime * _enemySpeed);
@@ -31,7 +39,13 @@ public class Enemy : MonoBehaviour
         if (other.tag == "Laser")
         {
             Destroy(other.gameObject);
+            if (_player != null)
+            {
+                _player.UpdateScore(Random.Range(5,10));
+            }
+            
             Destroy(this.gameObject);
+
 
         }
     }
